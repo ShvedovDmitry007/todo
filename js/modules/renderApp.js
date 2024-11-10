@@ -19,7 +19,7 @@ export const renderApp = () => {
 
   app.append(title, form, table);
 
-  console.log(getStorage(keyStorage));
+  // console.log(getStorage(keyStorage));
 
   return {
     keyStorage,

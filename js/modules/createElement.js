@@ -67,13 +67,14 @@ export const createTable = () => {
   return tableWrapper;
 };
 
-export const createTask = ({id, task}) => {
+export const createTask = ({id, taskNum, task}) => {
   const tr = document.createElement('tr');
   tr.classList.add('table-light');
+  tr.setAttribute('data-id', id)
 
   // TODO Доделать нумерацию!!!!
   const tdNumber = document.createElement('td');
-  tdNumber.textContent = id;
+  tdNumber.textContent = taskNum;
   //TODO -----------------------
 
   const tdTask = document.createElement('td');
@@ -81,6 +82,7 @@ export const createTask = ({id, task}) => {
   tdTask.textContent = task;
 
   const tdStatus = document.createElement('td');
+  tdStatus.classList.add('status');
   tdStatus.textContent = 'В работе';
 
   const tdBtns = document.createElement('td');
