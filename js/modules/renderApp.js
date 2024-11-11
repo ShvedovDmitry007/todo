@@ -1,6 +1,5 @@
-import { createForm, createTable, createTask, createTitle } from './createElement.js';
+import * as element from './createElement.js';
 import { tasksNumberChange } from './helpers.js';
-import { getStorage} from './storageActions.js';
 
 export const renderApp = () => {
   const app = document.querySelector('.app-container');
@@ -12,15 +11,12 @@ export const renderApp = () => {
     'justify-content-center',
     'flex-column'
   );
-
-  const title = createTitle();
+  const title = element.createTitle();
   const keyStorage = title.userName;
-  const { form, input, addBtn, clearBtn } = createForm();
-  const table = createTable();
+  const { form, input, addBtn, clearBtn } = element.createForm();
+  const table = element.createTable();
 
   app.append(title, form, table);
-
-  // console.log(getStorage(keyStorage));
 
   return {
     keyStorage,
@@ -33,8 +29,7 @@ export const renderApp = () => {
 };
 
 export const renderTasks = (elem, data) => {
-  const allTasks = data.map(createTask);
-  tasksNumberChange
+  const allTasks = data.map(element.createTask);
   elem.append(...allTasks);
   tasksNumberChange(elem);
 

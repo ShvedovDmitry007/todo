@@ -1,28 +1,25 @@
 import { createTask } from './createElement.js';
-import { randomId, tasksNumberChange } from './helpers.js';
-import {removeStorage, setStorage } from './storageActions.js';
+import * as help from './helpers.js';
+import * as storage from './storageActions.js';
 
-export const formEvent = (keyStorage, form, input, addBtn, clearBtn, list, appData) => {
-
+export const formEvent = (key, form, input, addBtn, clearBtn, list, data) => {
   form.addEventListener('submit', e => {
     e.preventDefault();
-
     const formData = new FormData(form);
     const newTask = Object.fromEntries(formData);
-    
     const task = {
-      id: randomId(),
+      id: help.randomId(),
       taskName: newTask.task,
       taskNum: 1,
       done: false,
     };
 
-    appData.push(task);
+    data.push(task);
     list.append(createTask(task, newTask));
-    setStorage(keyStorage, task);
+    storage.setStorage(key, task);
     addBtn.disabled = true;
     form.reset();
-    tasksNumberChange(list);
+    help.tasksNumberChange(list);
   });
 
   input.addEventListener('input', () => {
@@ -34,31 +31,29 @@ export const formEvent = (keyStorage, form, input, addBtn, clearBtn, list, appDa
   clearBtn.addEventListener('click', () => {
     addBtn.disabled = true;
   });
-
-
 };
 
-export const tableEvent = (list, data, keyStorage) => {
-  console.log(data);
-    list.addEventListener('click', (e) => {
-      const target = e.target;
+export const tableEvent = (list, data, key) => {
+  list.addEventListener('click', (e) => {
+    const target = e.target;
 
-      if (target.closest('.btn-success')) {
-        const targetId = target.closest('tr').dataset.id;
-        const targetData = data.find((item) => item.id === targetId);
-        
-        targetData.done =! targetData.done;
-        localStorage.setItem(keyStorage, JSON.stringify(data));
-        target.closest('tr').classList = targetData.done ? 'table-success' : 'table-light';
-        target.closest('.btn-success').textContent = targetData.done ? 'Выполнена' : 'Завершить';
-        target.closest('tr').querySelector('.status').textContent = targetData.done ? 'Выполнена' : 'В работе';      
-      } 
+    if (target.closest('.btn-success')) {
+      const targetId = target.closest('tr').dataset.id;
+      const targetData = data.find((item) => item.id === targetId);
 
-      if (target.closest('.btn-danger')) {
-        const targetId = target.closest('tr').dataset.id;
-        target.closest('tr').remove();
-        removeStorage(targetId, keyStorage);
-        tasksNumberChange(list);
-      }
-    }); 
+      targetData.done =! targetData.done;
+      localStorage.setItem(key, JSON.stringify(data));
+      target.closest('tr').classList = targetData.done ? 'table-success' : 'table-light';
+      target.closest('.btn-success').textContent = targetData.done ? 'Возобновить' : 'Завершить';
+      target.closest('tr').querySelector('.status').textContent = targetData.done ? 'Выполнена' : 'В работе';
+    }
+
+    if (target.closest('.btn-danger')) {
+      const targetId = target.closest('tr').dataset.id;
+
+      target.closest('tr').remove();
+      storage.removeStorage(targetId, key);
+      help.tasksNumberChange(list);
+    }
+  }); 
 };

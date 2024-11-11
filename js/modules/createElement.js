@@ -1,5 +1,3 @@
-import { tasksNumberChange } from "./helpers.js";
-
 export const createTitle = () => {
   const userName = prompt('Введите ваше имя:')
   const title = document.createElement('h3');
@@ -71,14 +69,7 @@ export const createTable = () => {
 };
 
 export const createTask = ({id, taskName, done}) => {
-  console.log('Приходит в createTask: ', taskName);
-
   const tr = document.createElement('tr');
-  if (done === false) {
-    tr.classList.add('table-light');
-  } else {
-    tr.classList.add('table-success');
-  }
   tr.setAttribute('data-id', id);
 
   const tdNumber = document.createElement('td');
@@ -90,14 +81,8 @@ export const createTask = ({id, taskName, done}) => {
 
   const tdStatus = document.createElement('td');
   tdStatus.classList.add('status');
-  if (done === false) {
-    tdStatus.textContent = 'В работе';
-  } else {
-    tdStatus.textContent = 'Выполнена';
-  }
 
   const tdBtns = document.createElement('td');
-
   const delBtn = document.createElement('button');
   delBtn.classList.add('btn', 'btn-danger', 'me-3');
   delBtn.type = 'button';
@@ -106,7 +91,17 @@ export const createTask = ({id, taskName, done}) => {
   const doneBtn = document.createElement('button');
   doneBtn.classList.add('btn', 'btn-success');
   delBtn.type = 'button';
-  doneBtn.textContent = 'Завершить';
+
+
+  if (done === false) {
+    tr.classList.add('table-light');
+    tdStatus.textContent = 'В работе';
+    doneBtn.textContent = 'Завершить';
+  } else {
+    tr.classList.add('table-success');
+    tdStatus.textContent = 'Выполнена';
+    doneBtn.textContent = 'Возобновить';
+  }
 
   tdBtns.append(delBtn, doneBtn);
   tr.append(tdNumber, tdTask, tdStatus, tdBtns);

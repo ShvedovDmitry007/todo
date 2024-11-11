@@ -20,7 +20,6 @@ export const removeStorage = (targetId, key) => {
   data.forEach((element, index) => {
     if (element.id === targetId) {
       data.splice(index, 1);
-      console.log(data);
       localStorage.setItem(key, JSON.stringify(data));
       console.log(localStorage.length);
     }
