@@ -5,3 +5,11 @@ export const randomId = () => {
   }
   return result;
 };
+
+export const tasksNumberChange = (tableBody) => {
+  const tasks = tableBody.querySelectorAll('tr');
+  
+  tasks.forEach((task, index) => {
+    task.cells[0].textContent = `${index + 1}`
+  });
+};

@@ -1,3 +1,5 @@
+import { tasksNumberChange } from "./helpers.js";
+
 export const createTitle = () => {
   const userName = prompt('Введите ваше имя:')
   const title = document.createElement('h3');
@@ -17,6 +19,7 @@ export const createForm = () => {
   const input = document.createElement('input');
   input.classList.add('form-control');
   input.type = 'text';
+  input.name = 'task';
   input.placeholder = 'Ввести задачу'; 
 
   const addBtn = document.createElement('button');
@@ -67,23 +70,31 @@ export const createTable = () => {
   return tableWrapper;
 };
 
-export const createTask = ({id, taskNum, task}) => {
-  const tr = document.createElement('tr');
-  tr.classList.add('table-light');
-  tr.setAttribute('data-id', id)
+export const createTask = ({id, taskName, done}) => {
+  console.log('Приходит в createTask: ', taskName);
 
-  // TODO Доделать нумерацию!!!!
+  const tr = document.createElement('tr');
+  if (done === false) {
+    tr.classList.add('table-light');
+  } else {
+    tr.classList.add('table-success');
+  }
+  tr.setAttribute('data-id', id);
+
   const tdNumber = document.createElement('td');
-  tdNumber.textContent = taskNum;
-  //TODO -----------------------
+  tdNumber.classList.add('task-number');
 
   const tdTask = document.createElement('td');
   tdTask.classList.add('task');
-  tdTask.textContent = task;
+  tdTask.textContent = taskName;
 
   const tdStatus = document.createElement('td');
   tdStatus.classList.add('status');
-  tdStatus.textContent = 'В работе';
+  if (done === false) {
+    tdStatus.textContent = 'В работе';
+  } else {
+    tdStatus.textContent = 'Выполнена';
+  }
 
   const tdBtns = document.createElement('td');
 

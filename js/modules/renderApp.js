@@ -1,4 +1,5 @@
 import { createForm, createTable, createTask, createTitle } from './createElement.js';
+import { tasksNumberChange } from './helpers.js';
 import { getStorage} from './storageActions.js';
 
 export const renderApp = () => {
@@ -33,7 +34,9 @@ export const renderApp = () => {
 
 export const renderTasks = (elem, data) => {
   const allTasks = data.map(createTask);
+  tasksNumberChange
   elem.append(...allTasks);
-  
+  tasksNumberChange(elem);
+
   return allTasks;
 };

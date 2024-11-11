@@ -5,10 +5,11 @@ import { formEvent, tableEvent } from './modules/сlickEvents.js';
 
 const init = () => {
   const { keyStorage, form, input, addBtn, clearBtn, list } = renderApp();
-  const allTasks = renderTasks(list, getStorage(keyStorage));
+  const appData = getStorage(keyStorage);
+  renderTasks(list, appData);
 
-  formEvent(keyStorage, form, input, addBtn, clearBtn, list);
-  tableEvent(list);
+  formEvent(keyStorage, form, input, addBtn, clearBtn, list, appData);
+  tableEvent(list, appData, keyStorage);
 };
 
 init();

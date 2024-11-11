@@ -14,13 +14,15 @@ export const setStorage = (key, task) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
-// export const removeStorage = (task, keyStorage) => {
-//   const data = getStorage(keyStorage);
+export const removeStorage = (targetId, key) => {
+  const data = getStorage(key);
 
-//   data.forEach((contact, index) => {
-//     if (contact.phone === phone) {
-//       data.splice(index, 1);
-//       localStorage.setItem(keyStorage, JSON.stringify(data));
-//     }
-//   });
-// };
+  data.forEach((element, index) => {
+    if (element.id === targetId) {
+      data.splice(index, 1);
+      console.log(data);
+      localStorage.setItem(key, JSON.stringify(data));
+      console.log(localStorage.length);
+    }
+  });
+};

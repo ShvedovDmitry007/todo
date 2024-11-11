@@ -1,106 +1,64 @@
 import { createTask } from './createElement.js';
-import { randomId } from './helpers.js';
-import {setStorage } from './storageActions.js';
+import { randomId, tasksNumberChange } from './helpers.js';
+import {removeStorage, setStorage } from './storageActions.js';
 
-export const formEvent = (keyStorage, form, input, addBtn, clearBtn, list) => {
+export const formEvent = (keyStorage, form, input, addBtn, clearBtn, list, appData) => {
 
   form.addEventListener('submit', e => {
     e.preventDefault();
 
+    const formData = new FormData(form);
+    const newTask = Object.fromEntries(formData);
+    
     const task = {
       id: randomId(),
+      taskName: newTask.task,
       taskNum: 1,
-      task: input.value,
       done: false,
     };
 
+    appData.push(task);
+    list.append(createTask(task, newTask));
     setStorage(keyStorage, task);
-    list.append(createTask(task));
-
-    form.reset();
     addBtn.disabled = true;
+    form.reset();
+    tasksNumberChange(list);
   });
 
   input.addEventListener('input', () => {
     if (input.value.trim() !== '') {
       addBtn.disabled = false;
-    } else {
-      addBtn.disabled = true;
-    }
+    } 
   });
 
   clearBtn.addEventListener('click', () => {
     addBtn.disabled = true;
   });
+
+
 };
 
-export const tableEvent = (list) => {
-
-
-    const doneButtons = list.querySelectorAll('.btn-success');
-    const delButtons = list.querySelectorAll('.btn-danger');
-
-
-    const doneTask = (e) => {
+export const tableEvent = (list, data, keyStorage) => {
+  console.log(data);
+    list.addEventListener('click', (e) => {
       const target = e.target;
-      const eventTarget = target.closest('.table-light');
-      const eventTargetsuccess = target.closest('.table-success');
-      
-      if (eventTarget) {
+
+      if (target.closest('.btn-success')) {
+        const targetId = target.closest('tr').dataset.id;
+        const targetData = data.find((item) => item.id === targetId);
         
-        eventTarget.classList.add('table-success');
-        eventTarget.classList.remove('table-light');
-        eventTarget.querySelector('.task').classList.add('text-decoration-line-through');
-        eventTarget.querySelector('.status').textContent = 'Выполнена';
-      } else if (eventTargetsuccess) {
-        eventTarget.classList.add('table-light');
-        eventTarget.classList.remove('table-success');
-        eventTarget.querySelector('.task').classList.remove('text-decoration-line-through');
-        eventTarget.querySelector('.status').textContent = 'В работе';
+        targetData.done =! targetData.done;
+        localStorage.setItem(keyStorage, JSON.stringify(data));
+        target.closest('tr').classList = targetData.done ? 'table-success' : 'table-light';
+        target.closest('.btn-success').textContent = targetData.done ? 'Выполнена' : 'Завершить';
+        target.closest('tr').querySelector('.status').textContent = targetData.done ? 'Выполнена' : 'В работе';      
+      } 
+
+      if (target.closest('.btn-danger')) {
+        const targetId = target.closest('tr').dataset.id;
+        target.closest('tr').remove();
+        removeStorage(targetId, keyStorage);
+        tasksNumberChange(list);
       }
-      
-      // eventTarget.classList.replace('table-light', 'table-success');
-      // eventTarget.querySelector('.task').classList.add('text-decoration-line-through');
-      // eventTarget.querySelector('.status').textContent = 'Выполнена';
-
-      console.log(eventTarget);
-    };
-
-    const deleteTask = (e) => {
-      const target = e.target;
-      const eventTarget = target.closest('.table-light');
-      const eventTargetsuccess = target.closest('.table-success');
-
-      if (eventTarget) {
-        eventTarget.remove();
-      } else if (eventTargetsuccess) {
-        eventTargetsuccess.remove();
-      };
-
-      
-    };
-
-    doneButtons.forEach((doneBtn) => {
-      doneBtn.addEventListener('click', doneTask);
-    });
-
-    delButtons.forEach((delBtn) => {
-      delBtn.addEventListener('click', deleteTask);
-    });
-
-
-    // if (target.closest('.btn-success')) {
-    //   console.log('Завершить');
-
-    //   eventTarget.classList.replace('table-light', 'table-success');
-    //   eventTarget.querySelector('.task').classList.add('text-decoration-line-through');
-    //   eventTarget.querySelector('.status').textContent = 'Выполнена';
-    // } 
-
-    // if (target.closest('.btn-danger')) {
-    //   console.log('Удалить');
-
-    //   eventTarget.remove();
-    // }
-
+    }); 
 };
