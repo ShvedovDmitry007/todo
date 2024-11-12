@@ -25,7 +25,9 @@ export const formEvent = (key, form, input, addBtn, clearBtn, list, data) => {
   input.addEventListener('input', () => {
     if (input.value.trim() !== '') {
       addBtn.disabled = false;
-    } 
+    } else if (input.value.trim() === '') {
+      addBtn.disabled = true;
+    }
   });
 
   clearBtn.addEventListener('click', () => {
@@ -40,7 +42,6 @@ export const tableEvent = (list, data, key) => {
     if (target.closest('.btn-success')) {
       const targetId = target.closest('tr').dataset.id;
       const targetData = data.find((item) => item.id === targetId);
-
       targetData.done =! targetData.done;
       localStorage.setItem(key, JSON.stringify(data));
       target.closest('tr').classList = targetData.done ? 'table-success' : 'table-light';
@@ -50,9 +51,8 @@ export const tableEvent = (list, data, key) => {
 
     if (target.closest('.btn-danger')) {
       const targetId = target.closest('tr').dataset.id;
-
       target.closest('tr').remove();
-      storage.removeStorage(targetId, key);
+      storage.removeStorage(targetId, key, data);
       help.tasksNumberChange(list);
     }
   }); 

@@ -14,9 +14,7 @@ export const setStorage = (key, task) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
-export const removeStorage = (targetId, key) => {
-  const data = getStorage(key);
-
+export const removeStorage = (targetId, key, data) => {
   data.forEach((element, index) => {
     if (element.id === targetId) {
       data.splice(index, 1);
